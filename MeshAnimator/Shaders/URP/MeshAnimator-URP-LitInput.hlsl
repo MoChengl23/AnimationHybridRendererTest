@@ -9,9 +9,7 @@
 TEXTURE2D_ARRAY(_AnimTextures);
 SAMPLER(sampler_AnimTextures);
 UNITY_INSTANCING_BUFFER_START(Props)
- 
 	UNITY_DEFINE_INSTANCED_PROP(float, _AnimTextureIndex)
-   
 	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimTimeInfo)
 	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimInfo)
 	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimScalar)
@@ -32,7 +30,7 @@ half _Cutoff;
 half _Smoothness;
 half _Metallic;
 half _BumpScale;
-
+half _OcclusionStrength;
 CBUFFER_END
 
 TEXTURE2D(_OcclusionMap);       SAMPLER(sampler_OcclusionMap);

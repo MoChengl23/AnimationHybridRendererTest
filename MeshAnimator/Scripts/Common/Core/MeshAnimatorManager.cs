@@ -80,6 +80,7 @@ namespace FSG.MeshAnimator
         }
         private void UpdateTick(float time)
         {
+        
             if (_addAnimators.Count > 0)
             {
                 _animators.AddRange(_addAnimators);
@@ -111,6 +112,7 @@ namespace FSG.MeshAnimator
                         Debug.LogException(e);
                     }
                 }
+       
             }
         }
     }

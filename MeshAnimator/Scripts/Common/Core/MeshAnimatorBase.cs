@@ -7,6 +7,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Unity.Entities;
 
 namespace FSG.MeshAnimator
 {
@@ -36,6 +37,7 @@ namespace FSG.MeshAnimator
         public Action OnFrameUpdated { get; set; }
         public Action<bool> OnVisibilityChanged { get; set; }
         public int currentFrame;
+        public static int ECSFrame;
         public Transform LODCamera;
         public MeshAnimatorLODLevel[] LODLevels = new MeshAnimatorLODLevel[0];
 
@@ -144,29 +146,29 @@ namespace FSG.MeshAnimator
             if (OnVisibilityChanged != null)
                 OnVisibilityChanged(isVisible);
         }
-        // protected virtual void OnEnable()
-        // {
-        //     mTransform = transform;
-        //     if (resetOnEnable && meshFilter)
-        //     {
-        //         if (playAutomatically)
-        //         {
-        //             Play(defaultAnimation.AnimationName);
-        //         }
-        //         else
-        //         {
-        //             isPaused = true;
-        //         }
-        //         if (currentAnimation != null)
-        //         {
-        //             currentAnimation.GenerateFrame(baseMesh, currentFrame);
-        //             currentAnimation.DisplayFrame(this, currentFrame, -1);
-        //         }
-        //     }
-        //     if (Application.isPlaying)
-        //         MeshAnimatorManager.AddAnimator(this);
-        //     lastFrameTime = Time.time;
-        // }
+        protected virtual void OnEnable()
+        {
+            mTransform = transform;
+            if (resetOnEnable && meshFilter)
+            {
+                if (playAutomatically)
+                {
+                    Play(defaultAnimation.AnimationName);
+                }
+                else
+                {
+                    isPaused = true;
+                }
+                if (currentAnimation != null)
+                {
+                    currentAnimation.GenerateFrame(baseMesh, currentFrame);
+                    currentAnimation.DisplayFrame(this, currentFrame, -1);
+                }
+            }
+            if (Application.isPlaying)
+                MeshAnimatorManager.AddAnimator(this);
+            lastFrameTime = Time.time;
+        }
         protected virtual void OnDisable()
         {
             if (Application.isPlaying)
@@ -426,8 +428,10 @@ namespace FSG.MeshAnimator
             float normalizedTime = currentAnimTime / currentAnimation.length;
             int previousFrame = currentFrame;
             int totalFrames = currentAnimation.TotalFrames;
-            currentFrame = Math.Min((int)Math.Round(normalizedTime * totalFrames), totalFrames - 1);
+ 
 
+
+ 
             // do WrapMode.PingPong
             if (currentAnimation.wrapMode == WrapMode.PingPong)
             {

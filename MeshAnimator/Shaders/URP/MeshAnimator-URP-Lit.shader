@@ -2,9 +2,6 @@ Shader "Mesh Animator/Universal Render Pipeline/Lit"
 {
     Properties
     {
-         
-
-        
         // Specular vs Metallic workflow
         [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0
 
@@ -54,8 +51,6 @@ Shader "Mesh Animator/Universal Render Pipeline/Lit"
         [HideInInspector] _GlossMapScale("Smoothness", Float) = 0.0
         [HideInInspector] _Glossiness("Smoothness", Float) = 0.0
         [HideInInspector] _GlossyReflections("EnvironmentReflections", Float) = 0.0
-
-        
     }
 
     SubShader
@@ -118,12 +113,7 @@ Shader "Mesh Animator/Universal Render Pipeline/Lit"
 
             //--------------------------------------
             // GPU Instancing
-            // #pragma multi_compile_instancing
-            
-            #pragma multi_compile_DOTS_INSTANCING_ON
-            #pragma target 4.5
- 
-
+            #pragma multi_compile_instancing
 
             #pragma vertex MALitPassVertex
             #pragma fragment MALitPassFragment
@@ -231,29 +221,29 @@ Shader "Mesh Animator/Universal Render Pipeline/Lit"
 
             ENDHLSL
         }
-        // Pass
-        // {
-        //     Name "Universal2D"
-        //     Tags{ "LightMode" = "Universal2D" }
+        Pass
+        {
+            Name "Universal2D"
+            Tags{ "LightMode" = "Universal2D" }
 
-        //     Blend[_SrcBlend][_DstBlend]
-        //     ZWrite[_ZWrite]
-        //     Cull[_Cull]
+            Blend[_SrcBlend][_DstBlend]
+            ZWrite[_ZWrite]
+            Cull[_Cull]
 
-        //     HLSLPROGRAM
-        //     // Required to compile gles 2.0 with standard srp library
-        //     #pragma prefer_hlslcc gles
-        //     #pragma exclude_renderers d3d11_9x
+            HLSLPROGRAM
+            // Required to compile gles 2.0 with standard srp library
+            #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
 
-        //     #pragma vertex vert
-        //     #pragma fragment frag
-        //     #pragma shader_feature _ALPHATEST_ON
-        //     #pragma shader_feature _ALPHAPREMULTIPLY_ON
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma shader_feature _ALPHATEST_ON
+            #pragma shader_feature _ALPHAPREMULTIPLY_ON
 
-        //     #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-        //     #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
-        //     ENDHLSL
-        // }
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
+            ENDHLSL
+        }
 
 
     }

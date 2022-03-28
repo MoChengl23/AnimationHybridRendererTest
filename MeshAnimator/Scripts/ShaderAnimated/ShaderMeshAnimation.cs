@@ -16,7 +16,7 @@ namespace FSG.MeshAnimator.ShaderAnimated
         public override MeshFrameDataBase[] Frames { get { return frameData; } }
         public override int TotalFrames { get { return frameData.Length; } }
 
-        // [HideInInspector]
+        [HideInInspector]
         public MeshFrameDataBase[] frameData;
         // [HideInInspector]
         public Texture2D[] textures;

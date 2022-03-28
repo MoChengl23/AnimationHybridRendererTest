@@ -11,7 +11,7 @@ namespace FSG.MeshAnimator.ShaderAnimated
 {
     [AddComponentMenu("Mesh Animator/GPU Shader Animated")]
     [RequireComponent(typeof(MeshFilter))]
-    //  [ExecuteInEditMode]
+    // [ExecuteInEditMode]
     public class ShaderMeshAnimator : MeshAnimatorBase
     {
         private static readonly int _animTimeProp = Shader.PropertyToID("_AnimTimeInfo");
@@ -29,7 +29,7 @@ namespace FSG.MeshAnimator.ShaderAnimated
         private static Dictionary<Mesh, int> _meshCount = new Dictionary<Mesh, int>();
         private static List<Material> _materialCacheLookup = new List<Material>();
         private static HashSet<Material> _setMaterials = new HashSet<Material>();
-        public static Dictionary<Mesh, Texture2DArray> _animTextures = new Dictionary<Mesh, Texture2DArray>();
+        private static Dictionary<Mesh, Texture2DArray> _animTextures = new Dictionary<Mesh, Texture2DArray>();
 
         private int pixelsPerTexture = 2;
         private int textureStartIndex = 0;
@@ -55,40 +55,22 @@ namespace FSG.MeshAnimator.ShaderAnimated
         }
         public override IMeshAnimation[] animations { get { return meshAnimations; } }
 
-        // protected override void OnEnable()
-        // {
-        //     Debug.Log("Onable");
-        //     base.OnEnable();
-        //     AddMeshCount(_meshCount);
-        //     if (resetOnEnable)
-        //     {
-        //         currentAnimTime = 0f;
-        //         SetupTextureData();
-        //         RefreshTimeData();
-        //         RestartAnim();
-        //     }
-        // }
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            AddMeshCount(_meshCount);
+            if (resetOnEnable)
+            {
+                currentAnimTime = 0f;
+                // SetupTextureData();
+                RefreshTimeData();
+                RestartAnim();
+            }
+        }
         protected override void Start()
         {
-
-
+            base.Start();
             SetupTextureData();
-            // base.Start();
-            Debug.Log("Start");
-        }
-        void Update()
-        {
-
-            // var meshRenderer = GetComponent<MeshRenderer>();
-            // meshRenderer.GetSharedMaterials(_materialCacheLookup);
-            // Debug.Log(GetComponent<MeshRenderer>().material.GetFloat("TestValue"));
-        }
-        public void FUCK(){
-            // _materialCacheLookup[0].SetFloat("TestValue", 3);
-             
-            meshRenderer.GetPropertyBlock(materialPropertyBlock);
-            materialPropertyBlock.SetFloat("TestValue", 2);
-            meshRenderer.SetPropertyBlock(materialPropertyBlock);
         }
         protected override void OnDisable()
         {
@@ -157,7 +139,6 @@ namespace FSG.MeshAnimator.ShaderAnimated
         }
         protected override void OnCurrentAnimationChanged(IMeshAnimation meshAnimation)
         {
-            Debug.Log("Animation Change");
             ShaderMeshAnimation currentAnimation = meshAnimation as ShaderMeshAnimation;
             CreatePropertyBlock();
             meshRenderer.GetPropertyBlock(materialPropertyBlock);
@@ -169,7 +150,6 @@ namespace FSG.MeshAnimator.ShaderAnimated
             {
                 textureStartIndex += meshAnimations[i].textureCount;
             }
-            Debug.Log(currentAnimIndex);
             textureSizeX = currentAnimation.textureSize.x;
             textureSizeY = currentAnimation.textureSize.y;
             // set animation info
@@ -181,7 +161,6 @@ namespace FSG.MeshAnimator.ShaderAnimated
             materialPropertyBlock.SetFloat(_animTextureIndexProp, textureStartIndex);
             // set time info
             float startTime = _shaderTime.y;
-            Debug.Log(startTime);
             timeBlockData = new Vector4(
                 0,
                 currentAnimation.TotalFrames,
@@ -238,6 +217,18 @@ namespace FSG.MeshAnimator.ShaderAnimated
             base.RestartAnim();
             OnCurrentAnimationChanged(currentAnimation);
         }
+        public void Update()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Crossfade(1);
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                Crossfade(0);
+            }
+        }
+
         public override void Crossfade(int index, float speed)
         {
             if (currentAnimIndex < 0)
@@ -250,11 +241,20 @@ namespace FSG.MeshAnimator.ShaderAnimated
             meshRenderer.GetPropertyBlock(materialPropertyBlock);
             Vector4 crossfadeInfo = new Vector4(propertyBlockData.x, propertyBlockData.y, propertyBlockData.z, propertyBlockData.w);
 
-            int framesPerTexture = Mathf.FloorToInt((textureSizeX * textureSizeY) / (currentAnimation.vertexCount * 2));
-            int localOffset = Mathf.FloorToInt(currentFrame / (float)framesPerTexture);
+            // int framesPerTexture = Mathf.FloorToInt((textureSizeX * textureSizeY) / (currentAnimation.vertexCount * 2));
+            // int localOffset = Mathf.FloorToInt(currentFrame / (float)framesPerTexture);
+            // int textureIndex = textureStartIndex + localOffset;
+            // int frameOffset = Mathf.FloorToInt(currentFrame % framesPerTexture);
+            // int pixelOffset = currentAnimation.vertexCount * 2 * frameOffset;
+
+
+            int framesPerTexture = (int)((textureSizeX * textureSizeY) / (currentAnimation.vertexCount * 2));
+            int localOffset = (int)(currentFrame / (float)framesPerTexture);
             int textureIndex = textureStartIndex + localOffset;
-            int frameOffset = Mathf.FloorToInt(currentFrame % framesPerTexture);
+            int frameOffset = (int)(currentFrame % framesPerTexture);
             int pixelOffset = currentAnimation.vertexCount * 2 * frameOffset;
+
+
 
             crossfadeInfo.x = pixelOffset;
             var shaderTime = _shaderTime;
@@ -304,112 +304,8 @@ namespace FSG.MeshAnimator.ShaderAnimated
             // set property block
             meshRenderer.SetPropertyBlock(materialPropertyBlock);
         }
-        //         private void SetupTextureData()
-        //         {
-        //             Debug.Log("Texture");
-
-        // #if UNITY_EDITOR
-        //             if (!Application.isPlaying)
-        //             {
-        //                 if (baseMesh == null || meshAnimations == null || meshAnimations.Length == 0)
-        //                     return;
-        //             }
-        // #endif
-        //             CreatePropertyBlock();
-        //             if (!_animTextures.ContainsKey(baseMesh))
-        //             {
-        //                 int totalTextures = 0;
-        //                 Vector2Int texSize = Vector2Int.zero;
-        //                 for (int i = 0; i < meshAnimations.Length; i++)
-        //                 {
-        //                     var anim = meshAnimations[i];
-        //                     totalTextures += anim.textures.Length;
-        //                     for (int t = 0; t < anim.textures.Length; t++)
-        //                     {
-        //                         if (anim.textures[t].width > texSize.x)
-        //                             texSize.x = anim.textures[t].width;
-
-        //                         if (anim.textures[t].height > texSize.y)
-        //                             texSize.y = anim.textures[t].height;
-        //                     }
-        //                 }
-        //                 var textureLimit = QualitySettings.masterTextureLimit;
-        //                 QualitySettings.masterTextureLimit = 0;
-        //                 var copyTextureSupport = SystemInfo.copyTextureSupport;
-        //                 Texture2DArray texture2DArray = new Texture2DArray(texSize.x, texSize.y, totalTextures, meshAnimations[0].textures[0].format, false, false);
-        //                 texture2DArray.filterMode = FilterMode.Point;
-        //                 DontDestroyOnLoad(texture2DArray);
-        //                 int index = 0;
-        //                 for (int i = 0; i < meshAnimations.Length; i++)
-        //                 {
-        //                     var anim = meshAnimations[i];
-        //                     for (int t = 0; t < anim.textures.Length; t++)
-        //                     {
-        //                         var tex = anim.textures[t];
-        //                         if (copyTextureSupport != UnityEngine.Rendering.CopyTextureSupport.None)
-        //                         {
-        //                             Graphics.CopyTexture(tex, 0, 0, texture2DArray, index, 0);
-        //                         }
-        //                         else
-        //                         {
-        //                             texture2DArray.SetPixels(tex.GetPixels(0), index);
-        //                         }
-        //                         index++;
-        //                     }
-        //                     totalTextures += anim.textures.Length;
-        //                 }
-        //                 if (copyTextureSupport == UnityEngine.Rendering.CopyTextureSupport.None)
-        //                 {
-        //                     texture2DArray.Apply(true, true);
-        //                 }
-        //                 _animTextures.Add(baseMesh, texture2DArray);
-        //                 QualitySettings.masterTextureLimit = textureLimit;
-        //             }
-        //             _materialCacheLookup.Clear();
-        //             if (meshRenderer == null)
-        //                 meshRenderer = GetComponent<MeshRenderer>();
-        //             meshRenderer.GetSharedMaterials(_materialCacheLookup);
-        //             for (int m = 0; m < _materialCacheLookup.Count; m++)
-        //             {
-        //                 Material material = _materialCacheLookup[m];
-        //                 if (_setMaterials.Contains(material))
-        //                     continue;
-        //                 material.SetTexture(_animTexturesProp, _animTextures[baseMesh]);
-        //                 _setMaterials.Add(material);
-        //             }
-        // #if UNITY_EDITOR
-        //             if (!Application.isPlaying)
-        //             {
-        //                 meshRenderer = GetComponent<MeshRenderer>();
-        //                 currentAnimation = defaultMeshAnimation ?? meshAnimations[0];
-        //                 currentFrame = Mathf.Clamp(currentFrame, 0, currentAnimation.Frames.Length - 1);
-        //                 for (int i = 0; i < meshAnimations.Length; i++)
-        //                 {
-        //                     if (meshAnimations[i] == currentAnimation)
-        //                         currentAnimIndex = i;
-        //                 }
-        //                 if (currentAnimation != null)
-        //                 {
-        //                     OnCurrentAnimationChanged(defaultMeshAnimation ?? meshAnimations[0]);
-        //                     DisplayFrame(Random.Range(-2, -10000));
-        //                 }
-        //                 var materials = meshRenderer.sharedMaterials;
-        //                 for (int i = 0; i < materials.Length; i++)
-        //                 {
-        //                     materials[i].SetTexture(_animTexturesProp, _animTextures[baseMesh]);
-        //                 }
-        //                 meshRenderer.sharedMaterials = materials;
-        //                 meshRenderer.GetPropertyBlock(materialPropertyBlock);
-        //                 materialPropertyBlock.SetFloat(_animTextureIndexProp, 0);
-        //                 meshRenderer.SetPropertyBlock(materialPropertyBlock);
-        //             }
-        // #endif
-        //         }
-
         private void SetupTextureData()
         {
-            Debug.Log("Texture");
-
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
@@ -471,18 +367,14 @@ namespace FSG.MeshAnimator.ShaderAnimated
             if (meshRenderer == null)
                 meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.GetSharedMaterials(_materialCacheLookup);
-
-
             for (int m = 0; m < _materialCacheLookup.Count; m++)
             {
                 Material material = _materialCacheLookup[m];
                 if (_setMaterials.Contains(material))
                     continue;
-                Debug.Log("ChangeMAter");
                 material.SetTexture(_animTexturesProp, _animTextures[baseMesh]);
                 _setMaterials.Add(material);
             }
-            Debug.Log(_animTextures[baseMesh]);
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {

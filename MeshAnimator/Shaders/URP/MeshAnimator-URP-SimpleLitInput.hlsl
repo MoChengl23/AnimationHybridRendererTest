@@ -26,7 +26,6 @@ half4 _BaseColor;
 half4 _SpecColor;
 half4 _EmissionColor;
 half _Cutoff;
-// float _AnimTextureIndex;
 CBUFFER_END
 
 TEXTURE2D(_SpecGlossMap);       SAMPLER(sampler_SpecGlossMap);

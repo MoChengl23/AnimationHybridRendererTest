@@ -1,4 +1,4 @@
-// UNITY_SHADER_NO_UPGRADE
+//UNITY_SHADER_NO_UPGRADE
 
 #ifndef UNIVERSAL_PIPELINE_CORE_INCLUDED
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"

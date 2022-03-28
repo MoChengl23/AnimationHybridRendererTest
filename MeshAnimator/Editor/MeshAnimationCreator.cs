@@ -1771,8 +1771,7 @@ namespace FSG.MeshAnimator
                             }
 
                             // debug only
-                            // Debug.Log("123");
-                            // Instantiate(sampleGO, frame * Vector3.right, Quaternion.identity);
+                            //Instantiate(sampleGO, frame * Vector3.right, Quaternion.identity);
                             meshAnim.SetFrameData(i, data);
                             meshAnim.frameSkip = frameSkip;
                             framePositions.Add(meshesInFrame.ToList());

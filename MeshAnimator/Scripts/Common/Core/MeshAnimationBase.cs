@@ -33,11 +33,11 @@ namespace FSG.MeshAnimator
 		public float length;
 		[HideInInspector]
 		public int frameSkip = 1;
-        [HideInInspector]
+        // [HideInInspector]
         public RootMotionMode rootMotionMode = RootMotionMode.None;
         [HideInInspector]
         public string[] exposedTransforms;
-        [HideInInspector]
+        // [HideInInspector]
         public int vertexCount;
 
         protected virtual void OnEnable()

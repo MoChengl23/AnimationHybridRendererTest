@@ -1,33 +1,19 @@
 #pragma multi_compile_instancing
 #pragma require 2darray
-#pragma target 4.5
+#pragma target 3.5
 
-// UNITY_DECLARE_TEX2DARRAY(Props);
-// UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
-//     UNITY_DOTS_INSTANCED_PROP(float4, _AnimTimeInfo)
-// 	UNITY_DOTS_INSTANCED_PROP(float, _AnimTextureIndex)
-// 	UNITY_DOTS_INSTANCED_PROP(float4, _AnimTimeInfo)
-// 	UNITY_DOTS_INSTANCED_PROP(float4, _AnimInfo)
-// 	UNITY_DOTS_INSTANCED_PROP(float4, _AnimScalar)
-// 	UNITY_DOTS_INSTANCED_PROP(float, _CrossfadeAnimTextureIndex)
-// 	UNITY_DOTS_INSTANCED_PROP(float4, _CrossfadeAnimInfo)
-// 	UNITY_DOTS_INSTANCED_PROP(float4, _CrossfadeAnimScalar)
-// 	UNITY_DOTS_INSTANCED_PROP(float, _CrossfadeStartTime)
-// 	UNITY_DOTS_INSTANCED_PROP(float, _CrossfadeEndTime)
-// UNITY_DOTS_INSTANCING_END(Props)
-
-
-// UNITY_INSTANCING_BUFFER_START(Props)
-// 	UNITY_DEFINE_INSTANCED_PROP(float, _AnimTextureIndex)
-// 	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimTimeInfo)
-// 	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimInfo)
-// 	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimScalar)
-// 	UNITY_DEFINE_INSTANCED_PROP(float, _CrossfadeAnimTextureIndex)
-// 	UNITY_DEFINE_INSTANCED_PROP(float4, _CrossfadeAnimInfo)
-// 	UNITY_DEFINE_INSTANCED_PROP(float4, _CrossfadeAnimScalar)
-// 	UNITY_DEFINE_INSTANCED_PROP(float, _CrossfadeStartTime)
-// 	UNITY_DEFINE_INSTANCED_PROP(float, _CrossfadeEndTime)
-// UNITY_INSTANCING_BUFFER_END(Props)
+UNITY_DECLARE_TEX2DARRAY(_AnimTextures);
+UNITY_INSTANCING_BUFFER_START(Props)
+	UNITY_DEFINE_INSTANCED_PROP(float, _AnimTextureIndex)
+	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimTimeInfo)
+	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimInfo)
+	UNITY_DEFINE_INSTANCED_PROP(float4, _AnimScalar)
+	UNITY_DEFINE_INSTANCED_PROP(float, _CrossfadeAnimTextureIndex)
+	UNITY_DEFINE_INSTANCED_PROP(float4, _CrossfadeAnimInfo)
+	UNITY_DEFINE_INSTANCED_PROP(float4, _CrossfadeAnimScalar)
+	UNITY_DEFINE_INSTANCED_PROP(float, _CrossfadeStartTime)
+	UNITY_DEFINE_INSTANCED_PROP(float, _CrossfadeEndTime)
+UNITY_INSTANCING_BUFFER_END(Props)
 
 inline float GetPixelOffset(inout float textureIndex, float4 animInfo, float4 animTimeInfo)
 {

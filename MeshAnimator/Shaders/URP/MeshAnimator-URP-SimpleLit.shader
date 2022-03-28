@@ -45,7 +45,7 @@ Shader "Mesh Animator/Universal Render Pipeline/Simple Lit"
 		// start MeshAnimator
 		[PerRendererData] _AnimTimeInfo ("Animation Time Info", Vector) = (0.0, 0.0, 0.0, 0.0)
 		[PerRendererData] _AnimTextures ("Animation Textures", 2DArray) = "" {}
-
+		[PerRendererData] _AnimTextureIndex ("Animation Texture Index", float) = -1.0
 		[PerRendererData] _AnimInfo ("Animation Info", Vector) = (0.0, 0.0, 0.0, 0.0)
 		[PerRendererData] _AnimScalar ("Animation Scalar", Vector) = (1.0, 1.0, 1.0, 0.0)
 		[PerRendererData] _CrossfadeAnimTextureIndex ("Crossfade Texture Index", float) = -1.0
@@ -53,9 +53,6 @@ Shader "Mesh Animator/Universal Render Pipeline/Simple Lit"
 		[PerRendererData] _CrossfadeAnimScalar ("Crossfade Animation Scalar", Vector) = (1.0, 1.0, 1.0, 0.0)
 		[PerRendererData] _CrossfadeStartTime ("Crossfade Start Time", float) = -1.0
 		[PerRendererData] _CrossfadeEndTime ("Crossfade End Time", float) = -1.0
-       
-		[PerRendererData] _AnimTextureIndex ("Animation Texture Index", float) = -1.0
-        
 		// end MeshAnimator
     }
 
@@ -112,14 +109,11 @@ Shader "Mesh Animator/Universal Render Pipeline/Simple Lit"
             #pragma vertex MALitPassVertexSimple
             #pragma fragment MALitPassFragmentSimple
             #define BUMP_SCALE_NOT_SUPPORTED 1
- 
-           
 			
             #include "../MeshAnimator.hlsl"
             #include "MeshAnimator-URP-SimpleLitInput.hlsl"
             #include "MeshAnimator-URP-SimpleLitForwardPass.hlsl"
             ENDHLSL
- 
         }
 
         Pass
